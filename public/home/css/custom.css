@@ -1,0 +1,58 @@
+.ui-group {
+    margin-bottom: 30px;
+}
+
+.ui-group div .button {
+    background-color: #c80a48;
+    color: #fff;
+    border: 0;
+}
+
+.my_nav_css ul li a {
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: proxima-nova, sans-serif;
+    text-transform: uppercase;
+    position: relative;
+}
+.my_nav_css ul li:last-child a {
+    color: #00314a;
+    background-color: #fff;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+}
+.my_nav_css ul li:last-child:hover a {
+    background-color: transparent;
+    color: #fff;
+    border-color: #fff;
+}
+.my_nav_css ul li:not(:last-child) a::after {
+    position: absolute;
+    transition: all 0.3s;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: #fff;
+    content: "";
+    transform: translateX(-50%);
+}
+.my_nav_css ul li.active a::after,
+.my_nav_css ul li:hover a::after {
+    width: 70%;
+}
+a.scroll-to-top {
+    position: fixed;
+    right: 15px;
+    bottom: 15px;
+    display: none;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    color: #fff;
+    background: #c80a48;
+    transition: 0.3s;
+    line-height: 46px;
+    z-index: 9999;
+}
