@@ -32,15 +32,12 @@ class Dashboard extends React.Component{
         })
     }
     editPost(e){
-        return (
-            <Router>
-                <Switch>
-                    <Redirect to="/createpost"/>
-                </Switch>
-            </Router>
-        )
+        this.props.history.push('/createpost')
     }
     deletePost(e) {
+        console.log(e.target.id)
+    }
+    viewPost(e){
         console.log(e.target.id)
     }
 
@@ -72,6 +69,7 @@ class Dashboard extends React.Component{
                                         <th scope="row">{++index}</th>
                                         <td>{post.title.rendered}</td>
                                         <td>{post.date}</td>
+                                        <td id={post.id}><button type="button" className="btn btn-sm btn-outline-success" onClick={this.viewPost} id={post.id}>View</button></td>
                                         <td id={post.id}><button type="button" className="btn btn-sm btn-outline-warning" onClick={this.editPost} id={post.id}>Edit</button></td>
                                         <td id={post.id}><button type="button" className="btn btn-sm btn-outline-danger" onClick={this.deletePost} id={post.id}>Delete</button></td>
                                     </tr>

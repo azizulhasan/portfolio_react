@@ -4,6 +4,11 @@ import {BrowserRouter as Router, Route, Switch, Redirect } from "react-router-do
 import Login from "./components/login";
 import Navbar from "./components/navbar";
 import Dashboard from "./components/dashboard";
+import Todos from "./components/todos";
+import Blog from "./components/blog";
+import SingleBlog from "./components/singleblog";
+import categoryPosts from "./components/categoryPosts";
+
 import CreatePost from "./components/createPost";
 class App extends React.Component{
     constructor(props) {
@@ -15,15 +20,18 @@ class App extends React.Component{
     }
 
     componentDidMount(){
-        console.log(this.state.basePath);
 
     }
     render() {
         return(
         <Router>
-            <Navbar/>
+            {/* <Todos/> */}
                 <Switch>
-                    <Route exact path="/blog" component={Login} />
+                    <Route exact path="/blog" component={Blog} />
+                    <Route path="/blog/category/:cat_name" component={categoryPosts} />
+                    <Route  path="/blog/:slug" component={SingleBlog} />
+                    
+                    <Route path="/todos" component={Todos} />
                     <Route  path="/login" component={Login} />
                     <Route path="/dashboard" component={Dashboard}/>
                     <Route path="/createpost" component={CreatePost}/>
