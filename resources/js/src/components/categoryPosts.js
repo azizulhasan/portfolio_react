@@ -27,7 +27,7 @@ export default function categoryPosts(props ) {
     
     const currentPosts = props.location.state.response
 
-
+    
     const paginate = pageNumber => setCurrentPage(pageNumber)
     const viewPost = post_slug => {
 
@@ -52,8 +52,6 @@ export default function categoryPosts(props ) {
                 <Posts posts={currentPosts} 
                 loading={loading} 
                 viewPost={viewPost} 
-                get_category_name={get_category_name}
-                categoryPosts={categoryPosts}
                  / >
             </div>
             <div className="row">

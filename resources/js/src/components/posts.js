@@ -2,7 +2,7 @@ import { data } from 'jquery'
 import React , {useEffect, useState}from 'react';
 import axios from 'axios';
 
-export default function posts({posts, loading,viewPost, get_category_name, categoryPosts}) {
+export default function posts({posts, loading,viewPost, get_category_name, getCategoryPosts}) {
     
     
     if(loading){
@@ -35,9 +35,9 @@ export default function posts({posts, loading,viewPost, get_category_name, categ
 
                                     <p className="card-text" dangerouslySetInnerHTML={{__html:post.data.excerpt}}  />
                                     
-                                    <p className="card-text">{get_date(post.data.date)} / <a  onClick={()=>categoryPosts(post.categories[0],post.categories[2])} href="#">{post.categories[1]}</a></p>
+                                    <p className="card-text">{get_date(post.data.date)} / <a  onClick={()=>getCategoryPosts(post.categories[0],post.categories[2])} href="#">{post.categories[1]}</a></p>
 
-                                    <button onClick={()=>viewPost(post.data.slug)} className="btn btn-primary">ReadMore</button>
+                                    {/* <button onClick={()=>viewPost(post.data.slug)} className="btn btn-primary">ReadMore</button> */}
                                 </div>
                             </div>
                         </div>
