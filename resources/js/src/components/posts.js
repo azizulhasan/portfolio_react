@@ -35,9 +35,9 @@ export default function posts({posts, loading,viewPost, get_category_name, getCa
 
                                     <p className="card-text" dangerouslySetInnerHTML={{__html:post.data.excerpt}}  />
                                     
-                                    <p className="card-text">{get_date(post.data.date)} / <a  onClick={()=>getCategoryPosts(post.categories[0],post.categories[2])} href="#">{post.categories[1]}</a></p>
+                                    <p className="card-text">{get_date(post.data.date)} / <a  onClick={()=>getCategoryPosts(post.categories.id,post.categories.slug)} href="#">{post.categories.name}</a></p>
 
-                                    {/* <button onClick={()=>viewPost(post.data.slug)} className="btn btn-primary">ReadMore</button> */}
+                                    <button onClick={()=>viewPost(post.data.slug)} className="btn btn-primary">ReadMore</button>
                                 </div>
                             </div>
                         </div>

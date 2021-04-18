@@ -6,6 +6,10 @@ import { useHistory } from "react-router";
 
 export default function Blog(props ) {
     const [posts, setPosts] = useState([])
+    const [data, setData] = useState([])
+    const [categories, setCategories] = useState([])
+    const [catData, setCatData] = useState([])
+    const [catCategories, setCatCategories] = useState([])
     const [loading, setLoading] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
     const [postPerPage, setpostPerPage] = useState(10);
@@ -16,34 +20,44 @@ export default function Blog(props ) {
             
             setLoading(true);
              axios.get('https://webappick.com/wp-json/wp/v2/posts?page='+currentPage+'&_fields=id,title,excerpt,date,slug,categories,tags').then(res=>{
-                var  data ={}
+                
              for(var i = 0; i < res.data.length ; i++) {
-                  data = {
-                        id: res.data[i].id,
-                        title:res.data[i].title.rendered,
-                        excerpt:res.data[i].excerpt.rendered ,
-                        date: res.data[i].date,
-                        slug : res.data[i].slug,
-                    }
-                    
-                    if(res.data[i].categories[0] != ''){
-                        axios.get('https://webappick.com/wp-json/wp/v2/categories/'+res.data[i].categories[0]+'?_fields=id,name,slug').then(category=>{
-                            posts.push({data,  categories:[category.data.id,category.data.name,category.data.slug,]})
-                            data={}
-                        })
-                    }
+                data.push(
+                        {data:{
+                            id: res.data[i].id,
+                            title:res.data[i].title.rendered,
+                            excerpt:res.data[i].excerpt.rendered ,
+                            date: res.data[i].date,
+                            slug : res.data[i].slug,
+                            categories:res.data[i].categories[0]
+                        }}
+                    )
+                     if(res.data[i].categories[0] != ''){
+                            axios.get('https://webappick.com/wp-json/wp/v2/categories/'+res.data[i].categories[0]+'?_fields=id,name,slug').then(category=>{
+                                categories.push({categories:{id:category.data.id,name:category.data.name,slug:category.data.slug}})
+
+                            })
+                        }
                 }
                 
             })
-            .finally(()=>{
-                setPosts(posts)
-                  setTimeout(() => {
-                    // setLoading(false) 
-                    console.log(posts)
-                }, 5000);
-            }) 
+            const set_posts = setInterval(()=>{
+                if(data.length>0){
+                    setData(data)
+                    setCategories(categories)
+                    for(var i= 0; i< data.length; i++){
+                        posts.push({data:data[i].data, categories: categories[i].categories })
+                    }
+                    setPosts(posts)
+                    setLoading(false);
+                    clearInterval(set_posts)
+
+                }
+            },4000)
             
     },[])
+
+    
 
   
      
@@ -64,43 +78,44 @@ export default function Blog(props ) {
 
         setLoading(true);
         axios.get('https://webappick.com/wp-json/wp/v2/posts?categories='+category_id+'&_fields=id,title,excerpt,date,slug,categories,tags').then(res=>{
-            // console.log(res)
+            console.log(res)
         if(res.status == 200){
-                for(var i = 0; i < res.data.length ; i++) {
-                    var  data= {
+            for(var i = 0; i < res.data.length ; i++) {
+                catData.push(
+                    {data:{
                         id: res.data[i].id,
                         title:res.data[i].title.rendered,
                         excerpt:res.data[i].excerpt.rendered ,
                         date: res.data[i].date,
                         slug : res.data[i].slug,
-                    } 
-                  
-                    if(res.data[i].categories[0] != ''){
-                        axios.get('https://webappick.com/wp-json/wp/v2/categories/'+res.data[i].categories[0]+'?_fields=id,name,slug').then(category=>{
-                            categoryPosts.push({data,  categories:[category.data.id,category.data.name,category.data.slug,]})
-                        })
-                         
-                    }
-                    // if(res.data[i].tags[0] != ''){
-                    //     axios.get('https://webappick.com/wp-json/wp/v2/categories/'+res.data[i].categories[0]+'?_fields=id,name,slug').then(category=>{
-                    //         posts.push({data,  categories:[category.data.id,category.data.name,category.data.slug,]})
-                    //     })
-                    // }
+                        categories:res.data[i].categories[0]
+                    }}
+                )
+                if(res.data[i].categories[0] != ''){
+                    axios.get('https://webappick.com/wp-json/wp/v2/categories/'+res.data[i].categories[0]+'?_fields=id,name,slug').then(category=>{
+                        catCategories.push({categories:{id:category.data.id,name:category.data.name,slug:category.data.slug}})
+                    }) 
                 }
+            }
                 const clear_Interval = setInterval(()=>{
                     setLoading(true);
-                    setCategoryPosts(categoryPosts)
-                    if(categoryPosts.length>0){
-                        clearInterval(clear_Interval)
+                    if(catData.length> null){
+                        setCatData(catData)
+                        setCatCategories(catCategories)
+                        for(var i= 0; i< catData.length; i++){
+                            categoryPosts.push({data:catData[i].data, categories: catCategories[i].categories })
+                        }
+                        setCategoryPosts(categoryPosts)
                         history.push({
-                            pathname:  "/blog/category/"+categoryPosts[0].categories[2],
+                            pathname:  "/blog/category/"+categoryPosts[0].categories.slug,
                             state: {
                               response: categoryPosts 
                             } 
                          });
-                        setLoading(false) 
+                        setLoading(false);
+                        clearInterval(clear_Interval)
                     }
-                },5000)
+                },4000)
             }
         })
             
@@ -121,14 +136,14 @@ export default function Blog(props ) {
         
         <div className="container">
             <a href="/blog">Blog</a>
-            {/* <div className="row">
+            <div className="row">
                 <Posts posts={posts} 
                 loading={loading} 
                 viewPost={viewPost} 
                 get_category_name={get_category_name}
                 getCategoryPosts={getCategoryPosts}
                  / >
-            </div> */}
+            </div>
             <div className="row">
                 <div className="offset-md-4 col-md-6">
                 <Pagination 

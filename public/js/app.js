@@ -63824,58 +63824,92 @@ function Blog(props) {
       posts = _useState2[0],
       setPosts = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState4 = _slicedToArray(_useState3, 2),
-      loading = _useState4[0],
-      setLoading = _useState4[1];
+      data = _useState4[0],
+      setData = _useState4[1];
 
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(1),
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState6 = _slicedToArray(_useState5, 2),
-      currentPage = _useState6[0],
-      setCurrentPage = _useState6[1];
+      categories = _useState6[0],
+      setCategories = _useState6[1];
 
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(10),
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState8 = _slicedToArray(_useState7, 2),
-      postPerPage = _useState8[0],
-      setpostPerPage = _useState8[1];
+      catData = _useState8[0],
+      setCatData = _useState8[1];
 
   var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState10 = _slicedToArray(_useState9, 2),
-      categoryPosts = _useState10[0],
-      setCategoryPosts = _useState10[1];
+      catCategories = _useState10[0],
+      setCatCategories = _useState10[1];
+
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState12 = _slicedToArray(_useState11, 2),
+      loading = _useState12[0],
+      setLoading = _useState12[1];
+
+  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(1),
+      _useState14 = _slicedToArray(_useState13, 2),
+      currentPage = _useState14[0],
+      setCurrentPage = _useState14[1];
+
+  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(10),
+      _useState16 = _slicedToArray(_useState15, 2),
+      postPerPage = _useState16[0],
+      setpostPerPage = _useState16[1];
+
+  var _useState17 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState18 = _slicedToArray(_useState17, 2),
+      categoryPosts = _useState18[0],
+      setCategoryPosts = _useState18[1];
 
   var history = Object(react_router__WEBPACK_IMPORTED_MODULE_4__["useHistory"])();
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     setLoading(true);
     axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('https://webappick.com/wp-json/wp/v2/posts?page=' + currentPage + '&_fields=id,title,excerpt,date,slug,categories,tags').then(function (res) {
-      var data = {};
-
       for (var i = 0; i < res.data.length; i++) {
-        data = {
-          id: res.data[i].id,
-          title: res.data[i].title.rendered,
-          excerpt: res.data[i].excerpt.rendered,
-          date: res.data[i].date,
-          slug: res.data[i].slug
-        };
+        data.push({
+          data: {
+            id: res.data[i].id,
+            title: res.data[i].title.rendered,
+            excerpt: res.data[i].excerpt.rendered,
+            date: res.data[i].date,
+            slug: res.data[i].slug,
+            categories: res.data[i].categories[0]
+          }
+        });
 
         if (res.data[i].categories[0] != '') {
           axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('https://webappick.com/wp-json/wp/v2/categories/' + res.data[i].categories[0] + '?_fields=id,name,slug').then(function (category) {
-            posts.push({
-              data: data,
-              categories: [category.data.id, category.data.name, category.data.slug]
+            categories.push({
+              categories: {
+                id: category.data.id,
+                name: category.data.name,
+                slug: category.data.slug
+              }
             });
-            data = {};
           });
         }
       }
-    })["finally"](function () {
-      setPosts(posts);
-      setTimeout(function () {
-        // setLoading(false) 
-        console.log(posts);
-      }, 5000);
     });
+    var set_posts = setInterval(function () {
+      if (data.length > 0) {
+        setData(data);
+        setCategories(categories);
+
+        for (var i = 0; i < data.length; i++) {
+          posts.push({
+            data: data[i].data,
+            categories: categories[i].categories
+          });
+        }
+
+        setPosts(posts);
+        setLoading(false);
+        clearInterval(set_posts);
+      }
+    }, 4000);
   }, []); // const indexOfLastPost = currentPage * postPerPage;
   // const indexOfFirstPost = indexOfLastPost - postPerPage;
   // console.log(currentPosts)
@@ -63892,47 +63926,59 @@ function Blog(props) {
   var getCategoryPosts = function getCategoryPosts(category_id, slug) {
     setLoading(true);
     axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('https://webappick.com/wp-json/wp/v2/posts?categories=' + category_id + '&_fields=id,title,excerpt,date,slug,categories,tags').then(function (res) {
-      // console.log(res)
+      console.log(res);
+
       if (res.status == 200) {
         for (var i = 0; i < res.data.length; i++) {
-          var data = {
-            id: res.data[i].id,
-            title: res.data[i].title.rendered,
-            excerpt: res.data[i].excerpt.rendered,
-            date: res.data[i].date,
-            slug: res.data[i].slug
-          };
+          catData.push({
+            data: {
+              id: res.data[i].id,
+              title: res.data[i].title.rendered,
+              excerpt: res.data[i].excerpt.rendered,
+              date: res.data[i].date,
+              slug: res.data[i].slug,
+              categories: res.data[i].categories[0]
+            }
+          });
 
           if (res.data[i].categories[0] != '') {
             axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('https://webappick.com/wp-json/wp/v2/categories/' + res.data[i].categories[0] + '?_fields=id,name,slug').then(function (category) {
-              categoryPosts.push({
-                data: data,
-                categories: [category.data.id, category.data.name, category.data.slug]
+              catCategories.push({
+                categories: {
+                  id: category.data.id,
+                  name: category.data.name,
+                  slug: category.data.slug
+                }
               });
             });
-          } // if(res.data[i].tags[0] != ''){
-          //     axios.get('https://webappick.com/wp-json/wp/v2/categories/'+res.data[i].categories[0]+'?_fields=id,name,slug').then(category=>{
-          //         posts.push({data,  categories:[category.data.id,category.data.name,category.data.slug,]})
-          //     })
-          // }
-
+          }
         }
 
         var clear_Interval = setInterval(function () {
           setLoading(true);
-          setCategoryPosts(categoryPosts);
 
-          if (categoryPosts.length > 0) {
-            clearInterval(clear_Interval);
+          if (catData.length > null) {
+            setCatData(catData);
+            setCatCategories(catCategories);
+
+            for (var i = 0; i < catData.length; i++) {
+              categoryPosts.push({
+                data: catData[i].data,
+                categories: catCategories[i].categories
+              });
+            }
+
+            setCategoryPosts(categoryPosts);
             history.push({
-              pathname: "/blog/category/" + categoryPosts[0].categories[2],
+              pathname: "/blog/category/" + categoryPosts[0].categories.slug,
               state: {
                 response: categoryPosts
               }
             });
             setLoading(false);
+            clearInterval(clear_Interval);
           }
-        }, 5000);
+        }, 4000);
       }
     });
   };
@@ -63949,6 +63995,14 @@ function Blog(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     href: "/blog"
   }, "Blog"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "row"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_posts__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    posts: posts,
+    loading: loading,
+    viewPost: viewPost,
+    get_category_name: get_category_name,
+    getCategoryPosts: getCategoryPosts
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "offset-md-4 col-md-6"
@@ -65187,10 +65241,15 @@ function posts(_ref) {
       className: "card-text"
     }, get_date(post.data.date), " / ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
       onClick: function onClick() {
-        return getCategoryPosts(post.categories[0], post.categories[2]);
+        return getCategoryPosts(post.categories.id, post.categories.slug);
       },
       href: "#"
-    }, post.categories[1])))));
+    }, post.categories.name)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+      onClick: function onClick() {
+        return viewPost(post.data.slug);
+      },
+      className: "btn btn-primary"
+    }, "ReadMore"))));
   }));
 }
 
