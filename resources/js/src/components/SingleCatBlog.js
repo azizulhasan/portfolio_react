@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {BrowserRouter as Router, Redirect, Switch, Link} from "react-router-dom";
 import axios from  'axios';
-export default class singleblog extends Component {
+export default class SingleCatBlog extends Component {
     constructor(props) {
         super(props);
         this.state = {

@@ -3,6 +3,7 @@ import axios from 'axios';
 import Posts from './posts'
 import Pagination from './pagination'
 import { useHistory } from "react-router";
+import { countBy } from 'lodash-es';
 
 export default function Blog(props ) {
     const [posts, setPosts] = useState([])
@@ -15,6 +16,10 @@ export default function Blog(props ) {
     const [postPerPage, setpostPerPage] = useState(10);
     const [categoryPosts, setCategoryPosts] = useState([]);
     const history = useHistory();
+
+    const [perPage, setPerPage] = useState(100)
+    const [offset, setOffset] = useState(0)
+    const [totalCount, setTotalCount] = useState(0)
 
     useEffect(()=>{
             
@@ -54,6 +59,41 @@ export default function Blog(props ) {
 
                 }
             },4000)
+
+            const posts_count = setInterval(()=>{
+                var total= 0;
+                var off = 0;
+                var per = 100
+                axios.get('https://webappick.com/wp-json/wp/v2/posts?per_page='+per+'&offset='+off+'&_fields=id').then(res=>{
+                    
+                    if(res.status == 200){
+                        if(res.data.length==100){
+                            
+                            total += res.data.length
+                            off += res.data.length
+                            console.log(total)
+                            console.log(off)
+                            setTotalCount(total)
+                            setOffset(off)
+                            setTimeout(()=> {
+                                console.log(totalCount)
+                            console.log(offset)
+                            console.log(total)
+                            console.log(off)
+                            },3000)
+                            clearInterval(posts_count)
+                        }else{
+                            console.log('else '+totalCount)
+                            console.log('else '+offset)
+                            clearInterval(posts_count)
+                        }
+                        // clearInterval(posts_count)
+                    }
+                    
+                })
+                
+            },1000)
+            // https://webappick.com/wp-json/wp/v2/posts?per_page=100&offset=200&_fields=id
             
     },[])
 
@@ -70,15 +110,17 @@ export default function Blog(props ) {
 
 
     const viewPost = post_slug => {
-        console.log(post_slug);
+
         props.history.push('/blog/'+post_slug)
+
+
     }
 
     const getCategoryPosts = (category_id , slug)=> {
 
         setLoading(true);
         axios.get('https://webappick.com/wp-json/wp/v2/posts?categories='+category_id+'&_fields=id,title,excerpt,date,slug,categories,tags').then(res=>{
-            console.log(res)
+           
         if(res.status == 200){
             for(var i = 0; i < res.data.length ; i++) {
                 catData.push(
@@ -107,7 +149,7 @@ export default function Blog(props ) {
                         }
                         setCategoryPosts(categoryPosts)
                         history.push({
-                            pathname:  "/blog/category/"+categoryPosts[0].categories.slug,
+                            pathname:"/blog/category/"+ categoryPosts[0].categories.slug,
                             state: {
                               response: categoryPosts 
                             } 
@@ -122,15 +164,6 @@ export default function Blog(props ) {
         
        
     }
-    
-
-    const  get_category_name= category_id =>{
-
-        // axios.get('https://webappick.com/wp-json/wp/v2/categories/'+category_id[0]).then(res=>{
-        //     setcategories(res.data.name)
-        // })  
-        return category_id[0]
-    }
     return (
 
         
@@ -140,7 +173,6 @@ export default function Blog(props ) {
                 <Posts posts={posts} 
                 loading={loading} 
                 viewPost={viewPost} 
-                get_category_name={get_category_name}
                 getCategoryPosts={getCategoryPosts}
                  / >
             </div>
@@ -148,9 +180,8 @@ export default function Blog(props ) {
                 <div className="offset-md-4 col-md-6">
                 <Pagination 
                 postsPerPage={postPerPage} 
-                totalPosts={'100'} 
-                paginate={paginate}
-                />
+                totalPosts={posts.length} 
+                paginate={paginate}/>
                 </div>
             </div>
         </div>

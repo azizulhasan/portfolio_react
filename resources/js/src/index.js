@@ -8,14 +8,12 @@ import Todos from "./components/todos";
 import Blog from "./components/blog";
 import SingleBlog from "./components/singleblog";
 import categoryPosts from "./components/categoryPosts";
-
 import CreatePost from "./components/createPost";
+import SingleCatBlog from './components/SingleCatBlog';
 class App extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {
-            basePath: 'http://localhost/idb/1252639/laravel/portfolio/'
-        }
+        
 
     }
 
@@ -29,6 +27,8 @@ class App extends React.Component{
                 <Switch>
                     <Route exact path="/blog" component={Blog} />
                     <Route path="/blog/category/:cat_name" component={categoryPosts} />
+                    <Route path="/blog/category/:cat_name/:slug" component={SingleCatBlog} />
+
                     <Route  path="/blog/:slug" component={SingleBlog} />
                     
                     <Route path="/todos" component={Todos} />

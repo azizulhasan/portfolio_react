@@ -2,7 +2,7 @@ import { data } from 'jquery'
 import React , {useEffect, useState}from 'react';
 import axios from 'axios';
 
-export default function posts({posts, loading,viewPost, get_category_name, getCategoryPosts}) {
+export default function posts({posts, loading,viewPost, getCategoryPosts}) {
     
     
     if(loading){
@@ -31,7 +31,7 @@ export default function posts({posts, loading,viewPost, get_category_name, getCa
                         <div key={index} className="col-sm-6" >
                             <div className="card">
                                 <div className="card-body">
-                                    <a href={'blog/'+post.data.id}><h5 className="card-title">{post.data.title}</h5></a>
+                                    <a href="#" onClick={()=>viewPost(post.data.slug)} ><h5 className="card-title">{post.data.title}</h5></a>
 
                                     <p className="card-text" dangerouslySetInnerHTML={{__html:post.data.excerpt}}  />
                                     
