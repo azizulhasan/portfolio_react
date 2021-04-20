@@ -29,7 +29,53 @@ export default function categoryPosts(props ) {
     
 
     
-    const paginate = pageNumber => setCurrentPage(pageNumber)
+    const paginate = (pageNumber) =>{
+
+        
+        setLoading(true);
+        axios.get('https://webappick.com/wp-json/wp/v2/posts?page='+((pageNumber== undefined)?2:pageNumber)+'&per_page='+postPerPage+'&_fields=id,title,excerpt,date,slug,categories,tags').then(res=>{
+                
+            if(res.status == 200){
+                for(var i = 0; i < res.data.length ; i++) {
+                    data.push(
+                            {data:{
+                                id: res.data[i].id,
+                                title:res.data[i].title.rendered,
+                                excerpt:res.data[i].excerpt.rendered ,
+                                date: res.data[i].date,
+                                slug : res.data[i].slug,
+                                categories:res.data[i].categories[0]
+                            }}
+                        )
+                         if(res.data[i].categories[0] != ''){
+                                axios.get('https://webappick.com/wp-json/wp/v2/categories/'+res.data[i].categories[0]+'?_fields=id,name,slug').then(category=>{
+                                    categories.push({categories:{id:category.data.id,name:category.data.name,slug:category.data.slug}})
+     
+                                })
+                            }
+                    }
+            }
+               
+           })
+           const set_posts = setInterval(()=>{
+            
+            
+            // posts = []
+               if(data.length>0){
+                   setData(data)
+                   setCategories(categories)
+                   for(var i= 0; i< data.length; i++){
+                       posts.push({data:data[i].data, categories: categories[i].categories })
+                   }
+                   var newPosts = [...new Set(posts)];
+                   console.log(newPosts)
+                   setPosts(newPosts.slice(Math.max(newPosts.length - postPerPage, 1)))
+                   setLoading(false);
+                   clearInterval(set_posts)
+
+               }
+           },4000)
+    }
     const viewPost = post_slug => {
         // if(!slug){
         //     props.history.push('/blog/category/'+props.location.pathname.split('/')[3]+'/'+post_slug)

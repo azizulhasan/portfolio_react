@@ -3,7 +3,6 @@ import axios from 'axios';
 import Posts from './posts'
 import Pagination from './pagination'
 import { useHistory } from "react-router";
-import { countBy } from 'lodash-es';
 
 export default function Blog(props ) {
     const [posts, setPosts] = useState([])
@@ -24,81 +23,118 @@ export default function Blog(props ) {
     useEffect(()=>{
             
             setLoading(true);
-             axios.get('https://webappick.com/wp-json/wp/v2/posts?page='+currentPage+'&_fields=id,title,excerpt,date,slug,categories,tags').then(res=>{
+             const fetch_posts = (currentPage)=>{
+                axios.get('https://webappick.com/wp-json/wp/v2/posts?page='+currentPage+'&per_page='+postPerPage+'&_fields=id,title,excerpt,date,slug,categories,tags').then(res=>{
                 
-             for(var i = 0; i < res.data.length ; i++) {
-                data.push(
-                        {data:{
-                            id: res.data[i].id,
-                            title:res.data[i].title.rendered,
-                            excerpt:res.data[i].excerpt.rendered ,
-                            date: res.data[i].date,
-                            slug : res.data[i].slug,
-                            categories:res.data[i].categories[0]
-                        }}
-                    )
-                     if(res.data[i].categories[0] != ''){
-                            axios.get('https://webappick.com/wp-json/wp/v2/categories/'+res.data[i].categories[0]+'?_fields=id,name,slug').then(category=>{
-                                categories.push({categories:{id:category.data.id,name:category.data.name,slug:category.data.slug}})
-
-                            })
-                        }
-                }
-                
-            })
-            const set_posts = setInterval(()=>{
-                if(data.length>0){
-                    setData(data)
-                    setCategories(categories)
-                    for(var i= 0; i< data.length; i++){
-                        posts.push({data:data[i].data, categories: categories[i].categories })
-                    }
-                    setPosts(posts)
-                    setLoading(false);
-                    clearInterval(set_posts)
-
-                }
-            },4000)
-
+                    for(var i = 0; i < res.data.length ; i++) {
+                       data.push(
+                               {data:{
+                                   id: res.data[i].id,
+                                   title:res.data[i].title.rendered,
+                                   excerpt:res.data[i].excerpt.rendered ,
+                                   date: res.data[i].date,
+                                   slug : res.data[i].slug,
+                                   categories:res.data[i].categories[0]
+                               }}
+                           )
+                            if(res.data[i].categories[0] != ''){
+                                   axios.get('https://webappick.com/wp-json/wp/v2/categories/'+res.data[i].categories[0]+'?_fields=id,name,slug').then(category=>{
+                                       categories.push({categories:{id:category.data.id,name:category.data.name,slug:category.data.slug}})
+       
+                                   })
+                               }
+                       }
+                       
+                   })
+                   const set_posts = setInterval(()=>{
+                       if(data.length>0){
+                           setData(data)
+                           setCategories(categories)
+                           for(var i= 0; i< data.length; i++){
+                               posts.push({data:data[i].data, categories: categories[i].categories })
+                           }
+                           setPosts([...new Set(posts)])
+                           setLoading(false);
+                           clearInterval(set_posts)
+       
+                       }
+                   },6000)
+             }
+             fetch_posts(currentPage)
+             // calculate total page.
+            var total= 0;
+            var off = 0;
+            var per = 100
             const posts_count = setInterval(()=>{
-                var total= 0;
-                var off = 0;
-                var per = 100
                 axios.get('https://webappick.com/wp-json/wp/v2/posts?per_page='+per+'&offset='+off+'&_fields=id').then(res=>{
-                    
+
                     if(res.status == 200){
                         if(res.data.length==100){
-                            
                             total += res.data.length
                             off += res.data.length
-                            console.log(total)
-                            console.log(off)
                             setTotalCount(total)
                             setOffset(off)
-                            setTimeout(()=> {
-                                console.log(totalCount)
-                            console.log(offset)
-                            console.log(total)
-                            console.log(off)
-                            },3000)
-                            clearInterval(posts_count)
                         }else{
-                            console.log('else '+totalCount)
-                            console.log('else '+offset)
                             clearInterval(posts_count)
                         }
-                        // clearInterval(posts_count)
                     }
                     
                 })
                 
-            },1000)
-            // https://webappick.com/wp-json/wp/v2/posts?per_page=100&offset=200&_fields=id
+            },2000)
+
+            
             
     },[])
 
-    
+    const paginate = (pageNumber) =>{
 
+        // console.log(pageNumber)
+        // return
+        
+        setLoading(true);
+        axios.get('https://webappick.com/wp-json/wp/v2/posts?page='+((pageNumber== undefined)?2:pageNumber)+'&per_page='+postPerPage+'&_fields=id,title,excerpt,date,slug,categories,tags').then(res=>{
+                
+            if(res.status == 200){
+                for(var i = 0; i < res.data.length ; i++) {
+                    data.push(
+                            {data:{
+                                id: res.data[i].id,
+                                title:res.data[i].title.rendered,
+                                excerpt:res.data[i].excerpt.rendered ,
+                                date: res.data[i].date,
+                                slug : res.data[i].slug,
+                                categories:res.data[i].categories[0]
+                            }}
+                        )
+                         if(res.data[i].categories[0] != ''){
+                                axios.get('https://webappick.com/wp-json/wp/v2/categories/'+res.data[i].categories[0]+'?_fields=id,name,slug').then(category=>{
+                                    categories.push({categories:{id:category.data.id,name:category.data.name,slug:category.data.slug}})
+     
+                                })
+                            }
+                    }
+            }
+               
+           })
+           const set_posts = setInterval(()=>{
+            
+            // posts = []
+               if(data.length>0){
+                   setData(data)
+                   setCategories(categories)
+                   for(var i= 0; i< data.length; i++){
+                       posts.push({data:data[i].data, categories: categories[i].categories })
+                   }
+                   var newPosts = [...new Set(posts)];
+                   console.log(newPosts)
+                   setPosts(newPosts.slice(Math.max(newPosts.length - postPerPage, 1)))
+                   setLoading(false);
+                   clearInterval(set_posts)
+
+               }
+           },4000)
+    }
   
      
     // const indexOfLastPost = currentPage * postPerPage;
@@ -106,7 +142,7 @@ export default function Blog(props ) {
     
     
     // console.log(currentPosts)
-    const paginate = pageNumber => setCurrentPage(pageNumber)
+    
 
 
     const viewPost = post_slug => {
@@ -157,7 +193,7 @@ export default function Blog(props ) {
                         setLoading(false);
                         clearInterval(clear_Interval)
                     }
-                },4000)
+                },6000)
             }
         })
             
@@ -165,7 +201,7 @@ export default function Blog(props ) {
        
     }
     return (
-
+        
         
         <div className="container">
             <a href="/blog">Blog</a>
@@ -177,11 +213,12 @@ export default function Blog(props ) {
                  / >
             </div>
             <div className="row">
-                <div className="offset-md-4 col-md-6">
+                <div className={`${totalCount==0 || totalCount == 100 ?'offset-md-4 col-md-6': 'offset-md-2 col-md-10'}`}>
                 <Pagination 
                 postsPerPage={postPerPage} 
-                totalPosts={posts.length} 
-                paginate={paginate}/>
+                totalPosts={totalCount} 
+                paginate={paginate}
+                />
                 </div>
             </div>
         </div>
