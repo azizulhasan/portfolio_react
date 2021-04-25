@@ -3,6 +3,7 @@ import axios from 'axios';
 import Posts from './posts'
 import Pagination from './pagination'
 import { useHistory } from "react-router";
+import { setTimeout } from 'core-js';
 
 export default function Blog(props ) {
     const [posts, setPosts] = useState([])
@@ -19,6 +20,9 @@ export default function Blog(props ) {
     const [perPage, setPerPage] = useState(100)
     const [offset, setOffset] = useState(0)
     const [totalCount, setTotalCount] = useState(0)
+
+    const [searchData, setSearchData] = useState([])
+    const [searchLength, setSearchLength] = useState(0)
 
     useEffect(()=>{
             
@@ -83,7 +87,7 @@ export default function Blog(props ) {
                 
             },2000)
 
-            
+           
             
     },[])
 
@@ -137,12 +141,6 @@ export default function Blog(props ) {
     }
   
      
-    // const indexOfLastPost = currentPage * postPerPage;
-    // const indexOfFirstPost = indexOfLastPost - postPerPage;
-    
-    
-    // console.log(currentPosts)
-    
 
 
     const viewPost = post_slug => {
@@ -195,32 +193,95 @@ export default function Blog(props ) {
                     }
                 },6000)
             }
-        })
-            
-        
-       
+        }) 
     }
+    const getSearchValue = (searchText)=>{
+            console.log(searchText)
+            
+            setLoading(true);
+            if(searchText != ''){
+                axios.get('https://webappick.com/wp-json/wp/v2/search?search='+searchText).then(res=>{
+                    if(res.status == 200){
+                        
+                        setSearchLength(res.data.length)
+                        console.log(searchLength)
+                        for(var i = 0; i < res.data.length ; i++) {
+                            
+                            searchData[i] = {
+                                id: res.data[i].id,
+                                title:res.data[i].title,
+                                url:res.data[i].url
+                            };
+                                
+                        }
+                        setTimeout(()=>{
+                            setSearchData(searchData.slice(0, res.data.length))
+                            setLoading(false);
+                        },1000)
+                        
+                    }
+                    
+                })
+                    
+                        
+                // const set_posts = setInterval(()=>{
+                //     if(searchData.length>0){
+                        
+                        
+                //         console.log(searchData)
+                        
+                //         clearInterval(set_posts)
+    
+                //     }
+                // },1000)
+                
+            
+            }
+            
+    }
+
     return (
         
         
         <div className="container">
-            <a href="/blog">Blog</a>
-            <div className="row">
-                <Posts posts={posts} 
-                loading={loading} 
-                viewPost={viewPost} 
-                getCategoryPosts={getCategoryPosts}
-                 / >
-            </div>
-            <div className="row">
-                <div className={`${totalCount==0 || totalCount == 100 ?'offset-md-4 col-md-6': 'offset-md-2 col-md-10'}`}>
-                <Pagination 
-                postsPerPage={postPerPage} 
-                totalPosts={totalCount} 
-                paginate={paginate}
-                />
-                </div>
-            </div>
+            <nav className="navbar navbar-light bg-light">
+                <form className="form-inline row "  style={{width: '100%'}}>
+                    <input className="col-md-12 form-control-lg" onMouseLeave={(e)=>getSearchValue(e.target.value)} type="search" placeholder="Search " aria-label="Search"/>
+                </form>
+            </nav>
+            {
+                searchData.length>0
+                ? <>
+                <button type="button" onClick={()=>setSearchData([])} className="btn btn-primary btn-lg btn-block">Clear</button>
+                {
+                    searchData.map((data,i)=>{
+                        return(
+                            <p key={i}><a target="_blank" href={data.url}>{data.title}</a></p>
+                        )
+                    })
+                }
+                </>
+                :<> <a href="/blog">Blog</a>
+                    <div className="row">
+                        <Posts posts={posts.slice(0, 10)} 
+                        loading={loading} 
+                        viewPost={viewPost} 
+                        getCategoryPosts={getCategoryPosts}
+
+                        / >
+                    </div>
+                    <div className="row">
+                        <div className={`${totalCount==0 || totalCount == 100 ?'offset-md-4 col-md-6': 'offset-md-2 col-md-10'}`}>
+                        <Pagination 
+                        postsPerPage={postPerPage} 
+                        totalPosts={totalCount} 
+                        paginate={paginate}
+                        />
+                        </div>
+                    </div>
+                </>
+            }
+            
         </div>
     )
 }

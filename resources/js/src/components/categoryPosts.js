@@ -33,7 +33,7 @@ export default function categoryPosts(props ) {
 
         
         setLoading(true);
-        axios.get('https://webappick.com/wp-json/wp/v2/posts?page='+((pageNumber== undefined)?2:pageNumber)+'&per_page='+postPerPage+'&_fields=id,title,excerpt,date,slug,categories,tags').then(res=>{
+        axios.get('https://webappick.com/wp-json/wp/v2/posts?page='+((pageNumber== undefined)?2:pageNumber)+'&categories='+posts[0].categories.id+'&per_page='+postPerPage+'&_fields=id,title,excerpt,date,slug,categories,tags').then(res=>{
                 
             if(res.status == 200){
                 for(var i = 0; i < res.data.length ; i++) {
