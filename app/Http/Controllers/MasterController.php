@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Mail;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +28,9 @@ use App\portfolioisotopes;
 use App\alldescriptions;
 use App\socialicons;
 use App\rightnames;
+use App\Mail\UserMail;
+
+
 class MasterController extends Controller
 {
     /**
@@ -88,26 +93,32 @@ class MasterController extends Controller
     
     public function usercontactsstore(Request $data)
     {
-
+        $data = json_decode($data->data);
+       
         $student = new Usercontacts;
-        $student->name=$data->name;
-        $student->email=$data->email;
-        $student->message=$data->message;
-        $student->save();
+        $student->name      =$data[0]->value;
+        $student->email     =$data[1]->value;
+        $student->message   =$data[3]->value;
 
-        $certifications = Certifications::all();
-        $user = Skills::all();
-        $experiences = experiences::all();
-        $testimonials = testimonials::all();
-        $contacts = contacts::all();
-        $portfolios = portfolios::all();
-        $hometitles = hometitles::all();
-        $profilecategories = profilecategories::all();
-        $portfolioisotopes = portfolioisotopes::all();
-        $alldescriptions = alldescriptions::all();
-        $socialicons = socialicons::all();
-        $rightnames = rightnames::all();
-        return view('master', compact('certifications','user', 'experiences', 'contacts', 'testimonials', 'portfolios', 'hometitles', 'profilecategories', 'portfolioisotopes', 'alldescriptions', 'socialicons', 'rightnames'));
+        $student->save();
+        
+
+        $to = "azizulhasan.webappick@gmail.com";
+        $txt = $data[3]->value;
+
+        $details = [
+            'from' => $data[1]->value." ".$data[2]->value,
+            'body' => $txt
+        ];
+            $result = \Mail::to($to)->queue(new UserMail($details));
+        if($result == 0){
+            $response =  ['status'=> true];
+        }else{
+            $response =  ['status'=> false];
+        }
+        
+        
+        return response()->json($response);
     }
 
     /**

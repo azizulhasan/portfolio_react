@@ -14,6 +14,9 @@ export default class singleblog extends Component {
             slug:props.match.params.slug,
             categoryPosts:[],
             loading:false,
+            searchData:{},
+            searchLength:null,
+
 
         }
         this.getPost = this.getPost.bind(this);
@@ -24,6 +27,7 @@ export default class singleblog extends Component {
         this.get_date = this.get_date.bind(this)
         this.getCategoryPosts = this.getCategoryPosts.bind(this) 
         this.changeImageVal = this.changeImageVal.bind(this)
+        this.getSearchValue = this.getSearchValue.bind(this)
         
        
     }
@@ -70,7 +74,6 @@ export default class singleblog extends Component {
                 
                 // return imgSrcs;
         
-        console.log(imgSrcs)
     }
     getPost(slug){
         axios.get('https://webappick.com/wp-json/wp/v2/posts?slug='+slug+'&_fields=id,title,content,excerpt,date,slug,categories,tags').then(res=>{
@@ -89,7 +92,7 @@ export default class singleblog extends Component {
     }
     getPostComments(id){
         
-            console.log(id)
+            
             axios.get('https://webappick.com/wp-json/wp/v2/comments?post='+id+'&_fields=id,post,parent,author,author_name,date,content,author_avatar_urls,author_url&orderby=id').then(res=>{
                 
                 if(res.status == 200){
@@ -103,7 +106,6 @@ export default class singleblog extends Component {
                 }
                 if(this.state.comments[0] != undefined){
                     
-                    // this.state.comments.reverse()
                     console.log(this.state.comments.reverse())
                 }
                 
@@ -217,7 +219,7 @@ export default class singleblog extends Component {
                         //       response: this.state.categoryPosts 
                         //     } 
                         //  });
-                        console.log(this.state.categoryPosts)
+                        // console.log(this.state.categoryPosts)
                         this.setState({loading:false});
                         this.setState({catOrPosts:'cat'});
                         clearInterval(clear_Interval)
@@ -231,17 +233,53 @@ export default class singleblog extends Component {
     }
 
     
-     get_date(date){
+    get_date(date){
         let index =  date.indexOf('T');
        return date.slice(0 , index)
-   }
+    }
+    getSearchValue (searchText){
+            
+            
+            this.setState({
+                loading:true,
+                catOrPosts: 'search'
+            });
+            
+            if(searchText != ''){
+                axios.get('https://webappick.com/wp-json/wp/v2/search?search='+searchText).then(res=>{
+                    if(res.status == 200){
+                        var searchData = [];
+                        this.setState({searchLength : res.data.length})
+                        console.log(this.state.searchLength)
+                        for(var i = 0; i < res.data.length ; i++) {
+                            
+                            searchData[i] = {
+                                id: res.data[i].id,
+                                title:res.data[i].title,
+                                url:res.data[i].url
+                            };
+                                
+                        }
+                        setTimeout(()=>{
+                            this.setState({searchData: searchData.slice(0, res.data.length)})
+                            this.setState({loading:false});
+                            // console.log(this.state.searchData)
+                        },1000)
+                        
+                    }
+                    
+                })
+            }
+            
+    }
 
 
     render() {
-        const  post = this.state.post;
-        const recentPosts = this.state.recentPosts;
-        const categories = this.state.categories;
-        const comments = this.state.comments;
+        const  post         = this.state.post;
+        const recentPosts   = this.state.recentPosts;
+        const categories    = this.state.categories;
+        const comments      = this.state.comments;
+        const searchData    = this.state.searchData;
         const categoryStyle = {
             backgroundColor: "whiteSmoke",
             marginRight: "5px",
@@ -250,15 +288,45 @@ export default class singleblog extends Component {
           };
           
         
-        if(post.id != undefined && this.state.catOrPosts == 'post'){
+        if((post.id != undefined && this.state.catOrPosts == 'post')
+          || (this.state.catOrPosts == 'search' && this.state.loading == false)
+        ){
             return (
                 <div className="container">
+                    <nav className="navbar navbar-light bg-light">
+                        <form className="form-inline row "  style={{width: '100%'}}>
+                            <input className="col-md-12 form-control-lg" onMouseLeave={(e)=>this.getSearchValue(e.target.value)} type="search" placeholder="Search " aria-label="Search"/>
+                        </form>
+                        {
+                            searchData.length>0 && this.state.catOrPosts == 'search'
+                            ?<button type="button" onClick={()=>this.setState({searchData:[], catOrPosts: 'post'})} className=" col-md-12  btn btn-primary mb-2 btn-lg btn-block">Clear</button>:''
+                        }
+
+                    </nav>
                     <a href="/blog">Blog</a>
                     <div className="row">
-                        <div className="col-md-8" >
-                            <h3>{post.title.rendered}</h3>
-                            <div dangerouslySetInnerHTML={{__html:post.content.rendered}}/>
-                        </div>
+                        {
+                            this.state.catOrPosts == 'post'
+                            ?<>
+                                <div className="col-md-8" >
+                                    <h3>{post.title.rendered}</h3>
+                                    <div dangerouslySetInnerHTML={{__html:post.content.rendered}}/>
+                                </div>
+                            </>
+                            :this.state.catOrPosts == 'search' && searchData.length>0
+                            ?<>
+                            <div className="col-md-8" >
+                            
+                                {
+                                    searchData.map((data,i)=>{
+                                        return <p  key={i} ><a target="_blank" href={data.url}>{data.title}</a></p>
+                                           
+                                    })
+                                }
+                            </div>
+                            </>
+                            :<h4>Loading.</h4>
+                        }
 
                         <div className="col-md-4">
                            <div className="recent_posts">

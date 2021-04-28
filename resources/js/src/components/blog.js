@@ -196,10 +196,12 @@ export default function Blog(props ) {
         }) 
     }
     const getSearchValue = (searchText)=>{
-            console.log(searchText)
             
-            setLoading(true);
+            
+            
             if(searchText != ''){
+
+                setLoading(true);
                 axios.get('https://webappick.com/wp-json/wp/v2/search?search='+searchText).then(res=>{
                     if(res.status == 200){
                         
@@ -222,20 +224,6 @@ export default function Blog(props ) {
                     }
                     
                 })
-                    
-                        
-                // const set_posts = setInterval(()=>{
-                //     if(searchData.length>0){
-                        
-                        
-                //         console.log(searchData)
-                        
-                //         clearInterval(set_posts)
-    
-                //     }
-                // },1000)
-                
-            
             }
             
     }
@@ -252,7 +240,7 @@ export default function Blog(props ) {
             {
                 searchData.length>0
                 ? <>
-                <button type="button" onClick={()=>setSearchData([])} className="btn btn-primary btn-lg btn-block">Clear</button>
+                <button type="button" onClick={()=>setSearchData([])} className=" col-md-12  btn btn-primary mb-2 btn-lg btn-block">Clear</button>
                 {
                     searchData.map((data,i)=>{
                         return(

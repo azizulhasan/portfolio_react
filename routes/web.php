@@ -151,7 +151,7 @@ Route::get('delete/contacts/{id}','contactsController@destroy');
 
 /////**********************usercontacts *************************
 // Route::get('allcreate.usercontacts','UsercontactsController@usercontacts');
-Route::post('usercontacts/storeusercontacts','MasterController@usercontactsstore')->name('store.usercontacts');
+Route::post('usercontacts/storeusercontacts','MasterController@usercontactsstore');
 // Route::post('usercontacts/storeusercontacts','usercontactsController@store')->name('store.usercontacts');
 // Route::get('allcreate.usercontacts','usercontactsController@usercontacts');
 Route::get('allcreate.usercontacts','usercontactsController@view');

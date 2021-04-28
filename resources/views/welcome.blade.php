@@ -11,18 +11,18 @@
 
     <title>Azizul Hasan | Dashboard</title>
     
-    <link href="{{ asset('public/admin/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('public/admin/font-awesome/css/font-awesome.css') }}" rel="stylesheet">
-    <link rel="schortcut-icon" href="{{ asset('public/home/images/azizulhasan.jpg') }}" type="image/gif" sizes="16x16">
+    <link href="{{ asset('home/assets/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+    <link rel="schortcut-icon" href="{{ asset('home/images/azizulhasan.jpg') }}" type="image/gif" sizes="16x16">
 
     <!-- Toastr style -->
-    <link href="{{ asset('public/admin/css/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/css/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
 
     <!-- Gritter -->
-    <link href="{{ asset('public/admin/js/plugins/gritter/jquery.gritter.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/js/plugins/gritter/jquery.gritter.css') }}" rel="stylesheet">
 
-    <link href="{{ asset('public/admin/css/animate.css') }}" rel="stylesheet">
-    <link href="{{ asset('public/admin/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/css/animate.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/css/style.css') }}" rel="stylesheet">
 
 </head>
 
@@ -33,7 +33,7 @@
                 <ul class="nav metismenu" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element">
-                            <img alt="image" class="rounded-circle" src="{{asset ('public/admin/img/profile_small.jpg') }}"/>
+                            <img alt="image" class="rounded-circle" src="{{asset ('admin/img/profile_small.jpg') }}"/>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="block m-t-xs font-bold">Azizul Hasan</span>
                                 <span class="text-muted text-xs block">Full-Stack Web Developer <b class="caret"></b></span>
@@ -160,7 +160,7 @@
         </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li style="padding: 20px">
-                    <span class="m-r-sm text-muted welcome-message">Welcome to INSPINIA+ public/admin Theme.</span>
+                    <span class="m-r-sm text-muted welcome-message">Welcome to INSPINIA+ admin Theme.</span>
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
@@ -170,7 +170,7 @@
                         <li>
                             <div class="dropdown-messages-box">
                                 <a class="dropdown-item float-left" href="profile.html">
-                                    <img alt="image" class="rounded-circle" src="{{ asset('public/admin/img/a7.jpg') }}">
+                                    <img alt="image" class="rounded-circle" src="{{ asset('admin/img/a7.jpg') }}">
                                 </a>
                                 <div class="media-body">
                                     <small class="float-right">46h ago</small>
@@ -183,7 +183,7 @@
                         <li>
                             <div class="dropdown-messages-box">
                                 <a class="dropdown-item float-left" href="profile.html">
-                                    <img alt="image" class="rounded-circle" src="{{ asset('public/admin/img/a4.jpg') }}">
+                                    <img alt="image" class="rounded-circle" src="{{ asset('admin/img/a4.jpg') }}">
                                 </a>
                                 <div class="media-body ">
                                     <small class="float-right text-navy">5h ago</small>
@@ -196,7 +196,7 @@
                         <li>
                             <div class="dropdown-messages-box">
                                 <a class="dropdown-item float-left" href="profile.html">
-                                    <img alt="image" class="rounded-circle" src="{{ asset('public/admin/img/profile.jpg') }}">
+                                    <img alt="image" class="rounded-circle" src="{{ asset('admin/img/profile.jpg') }}">
                                 </a>
                                 <div class="media-body ">
                                     <small class="float-right">23h ago</small>
@@ -406,7 +406,7 @@
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="float-left text-center">
-                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('public/admin/img/a1.jpg') }}">
+                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('admin/img/a1.jpg') }}">
 
                                         <div class="m-t-xs">
                                             <i class="fa fa-star text-warning"></i>
@@ -424,7 +424,7 @@
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="float-left text-center">
-                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('public/admin/img/a2.jpg') }}">
+                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('admin/img/a2.jpg') }}">
                                     </div>
                                     <div class="media-body">
                                         The point of using Lorem Ipsum is that it has a more-or-less normal.
@@ -436,7 +436,7 @@
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="float-left text-center">
-                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('public/admin/img/a3.jpg') }}">
+                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('admin/img/a3.jpg') }}">
 
                                         <div class="m-t-xs">
                                             <i class="fa fa-star text-warning"></i>
@@ -454,7 +454,7 @@
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="float-left text-center">
-                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('public/admin/img/a4.jpg') }}">
+                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('admin/img/a4.jpg') }}">
                                     </div>
 
                                     <div class="media-body">
@@ -467,7 +467,7 @@
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="float-left text-center">
-                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('public/admin/img/a8.jpg') }}">
+                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('admin/img/a8.jpg') }}">
                                     </div>
                                     <div class="media-body">
 
@@ -480,7 +480,7 @@
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="float-left text-center">
-                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('public/admin/img/a7.jpg') }}">
+                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('admin/img/a7.jpg') }}">
                                     </div>
                                     <div class="media-body">
                                         Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
@@ -492,7 +492,7 @@
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="float-left text-center">
-                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('public/admin/img/a3.jpg') }}">
+                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('admin/img/a3.jpg') }}">
 
                                         <div class="m-t-xs">
                                             <i class="fa fa-star text-warning"></i>
@@ -510,7 +510,7 @@
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="float-left text-center">
-                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('public/admin/img/a4.jpg') }}">
+                                        <img alt="image" class="rounded-circle message-avatar" src="{{ asset('admin/img/a4.jpg') }}">
                                     </div>
                                     <div class="media-body">
                                         Uncover many web sites still in their infancy. Various versions have.
@@ -751,44 +751,44 @@
     </div>
 
     <!-- Mainly scripts -->
-    <script src="{{ asset('public/admin/js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('public/admin/js/popper.min.js') }}"></script>
-    <script src="{{ asset('public/admin/js/bootstrap.js') }}"></script>
-    <script src="{{ asset('public/admin/js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('public/admin/js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('admin/js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('admin/js/popper.min.js') }}"></script>
+    <script src="{{ asset('admin/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
     <!-- Flot -->
-    <script src="{{ asset('public/admin/js/plugins/flot/jquery.flot.js') }}"></script>
-    <script src="{{ asset('public/admin/js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
-    <script src="{{ asset('public/admin/js/plugins/flot/jquery.flot.spline.js') }}"></script>
-    <script src="{{ asset('public/admin/js/plugins/flot/jquery.flot.resize.js') }}"></script>
-    <script src="{{ asset('public/admin/js/plugins/flot/jquery.flot.pie.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/flot/jquery.flot.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/flot/jquery.flot.spline.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/flot/jquery.flot.resize.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/flot/jquery.flot.pie.js') }}"></script>
 
     <!-- Peity -->
-    <script src="{{ asset('public/admin/js/plugins/peity/jquery.peity.min.js') }}"></script>
-    <script src="{{ asset('public/admin/js/demo/peity-demo.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/peity/jquery.peity.min.js') }}"></script>
+    <script src="{{ asset('admin/js/demo/peity-demo.js') }}"></script>
 
     <!-- Custom and plugin javascript -->
-    <script src="{{ asset('public/admin/js/inspinia.js') }}"></script>
-    <script src="{{ asset('public/admin/js/plugins/pace/pace.min.js') }}"></script>
+    <script src="{{ asset('admin/js/inspinia.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/pace/pace.min.js') }}"></script>
 
     <!-- jQuery UI -->
-    <script src="{{ asset('public/admin/js/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 
     <!-- GITTER -->
-    <script src="{{ asset('public/admin/js/plugins/gritter/jquery.gritter.min.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/gritter/jquery.gritter.min.js') }}"></script>
 
     <!-- Sparkline -->
-    <script src="{{ asset('public/admin/js/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
 
     <!-- Sparkline demo data  -->
-    <script src="{{ asset('public/admin/js/demo/sparkline-demo.js') }}"></script>
+    <script src="{{ asset('admin/js/demo/sparkline-demo.js') }}"></script>
 
     <!-- ChartJS-->
-    <script src="{{ asset('public/admin/js/plugins/chartJs/Chart.min.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/chartJs/Chart.min.js') }}"></script>
 
     <!-- Toastr -->
-    <script src="{{ asset('public/admin/js/plugins/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('admin/js/plugins/toastr/toastr.min.js') }}"></script>
 
 
     <script>
@@ -800,7 +800,7 @@
                     showMethod: 'slideDown',
                     timeOut: 4000
                 };
-                toastr.success('Responsive public/admin Theme', 'Welcome to INSPINIA');
+                toastr.success('Responsive admin Theme', 'Welcome to INSPINIA');
 
             }, 1300);
 

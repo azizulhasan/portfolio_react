@@ -67593,10 +67593,8 @@ function Blog(props) {
   };
 
   var getSearchValue = function getSearchValue(searchText) {
-    console.log(searchText);
-    setLoading(true);
-
     if (searchText != '') {
+      setLoading(true);
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('https://webappick.com/wp-json/wp/v2/search?search=' + searchText).then(function (res) {
         if (res.status == 200) {
           setSearchLength(res.data.length);
@@ -67615,12 +67613,7 @@ function Blog(props) {
             setLoading(false);
           }, 1000);
         }
-      }); // const set_posts = setInterval(()=>{
-      //     if(searchData.length>0){
-      //         console.log(searchData)
-      //         clearInterval(set_posts)
-      //     }
-      // },1000)
+      });
     }
   };
 
@@ -67646,7 +67639,7 @@ function Blog(props) {
     onClick: function onClick() {
       return setSearchData([]);
     },
-    className: "btn btn-primary btn-lg btn-block"
+    className: " col-md-12  btn btn-primary mb-2 btn-lg btn-block"
   }, "Clear"), searchData.map(function (data, i) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
       key: i
@@ -69218,7 +69211,9 @@ var singleblog = /*#__PURE__*/function (_Component) {
       comments: {},
       slug: props.match.params.slug,
       categoryPosts: [],
-      loading: false
+      loading: false,
+      searchData: {},
+      searchLength: null
     };
     _this.getPost = _this.getPost.bind(_assertThisInitialized(_this));
     _this.getRecentPosts = _this.getRecentPosts.bind(_assertThisInitialized(_this));
@@ -69228,6 +69223,7 @@ var singleblog = /*#__PURE__*/function (_Component) {
     _this.get_date = _this.get_date.bind(_assertThisInitialized(_this));
     _this.getCategoryPosts = _this.getCategoryPosts.bind(_assertThisInitialized(_this));
     _this.changeImageVal = _this.changeImageVal.bind(_assertThisInitialized(_this));
+    _this.getSearchValue = _this.getSearchValue.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -69267,8 +69263,6 @@ var singleblog = /*#__PURE__*/function (_Component) {
         }
       } // return imgSrcs;
 
-
-      console.log(imgSrcs);
     }
   }, {
     key: "getPost",
@@ -69298,7 +69292,6 @@ var singleblog = /*#__PURE__*/function (_Component) {
     value: function getPostComments(id) {
       var _this3 = this;
 
-      console.log(id);
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('https://webappick.com/wp-json/wp/v2/comments?post=' + id + '&_fields=id,post,parent,author,author_name,date,content,author_avatar_urls,author_url&orderby=id').then(function (res) {
         if (res.status == 200) {
           if (res.data.length > 1) {
@@ -69315,7 +69308,6 @@ var singleblog = /*#__PURE__*/function (_Component) {
         }
 
         if (_this3.state.comments[0] != undefined) {
-          // this.state.comments.reverse()
           console.log(_this3.state.comments.reverse());
         }
       })["catch"](function (err) {
@@ -69458,9 +69450,8 @@ var singleblog = /*#__PURE__*/function (_Component) {
               //       response: this.state.categoryPosts 
               //     } 
               //  });
+              // console.log(this.state.categoryPosts)
 
-
-              console.log(_this7.state.categoryPosts);
 
               _this7.setState({
                 loading: false
@@ -69477,14 +69468,58 @@ var singleblog = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
+    key: "getSearchValue",
+    value: function getSearchValue(searchText) {
+      var _this8 = this;
+
+      this.setState({
+        loading: true,
+        catOrPosts: 'search'
+      });
+
+      if (searchText != '') {
+        axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('https://webappick.com/wp-json/wp/v2/search?search=' + searchText).then(function (res) {
+          if (res.status == 200) {
+            var searchData = [];
+
+            _this8.setState({
+              searchLength: res.data.length
+            });
+
+            console.log(_this8.state.searchLength);
+
+            for (var i = 0; i < res.data.length; i++) {
+              searchData[i] = {
+                id: res.data[i].id,
+                title: res.data[i].title,
+                url: res.data[i].url
+              };
+            }
+
+            setTimeout(function () {
+              _this8.setState({
+                searchData: searchData.slice(0, res.data.length)
+              });
+
+              _this8.setState({
+                loading: false
+              }); // console.log(this.state.searchData)
+
+            }, 1000);
+          }
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this8 = this;
+      var _this9 = this;
 
       var post = this.state.post;
       var recentPosts = this.state.recentPosts;
       var categories = this.state.categories;
       var comments = this.state.comments;
+      var searchData = this.state.searchData;
       var categoryStyle = {
         backgroundColor: "whiteSmoke",
         marginRight: "5px",
@@ -69492,20 +69527,53 @@ var singleblog = /*#__PURE__*/function (_Component) {
         fontWeight: "bold"
       };
 
-      if (post.id != undefined && this.state.catOrPosts == 'post') {
+      if (post.id != undefined && this.state.catOrPosts == 'post' || this.state.catOrPosts == 'search' && this.state.loading == false) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "container"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
+          className: "navbar navbar-light bg-light"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+          className: "form-inline row ",
+          style: {
+            width: '100%'
+          }
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+          className: "col-md-12 form-control-lg",
+          onMouseLeave: function onMouseLeave(e) {
+            return _this9.getSearchValue(e.target.value);
+          },
+          type: "search",
+          placeholder: "Search ",
+          "aria-label": "Search"
+        })), searchData.length > 0 && this.state.catOrPosts == 'search' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          type: "button",
+          onClick: function onClick() {
+            return _this9.setState({
+              searchData: [],
+              catOrPosts: 'post'
+            });
+          },
+          className: " col-md-12  btn btn-primary mb-2 btn-lg btn-block"
+        }, "Clear") : ''), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
           href: "/blog"
         }, "Blog"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "row"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, this.state.catOrPosts == 'post' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "col-md-8"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, post.title.rendered), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           dangerouslySetInnerHTML: {
             __html: post.content.rendered
           }
-        })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }))) : this.state.catOrPosts == 'search' && searchData.length > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "col-md-8"
+        }, searchData.map(function (data, i) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+            key: i
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+            target: "_blank",
+            href: data.url
+          }, data.title));
+        }))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "Loading."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "col-md-4"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "recent_posts"
@@ -69513,7 +69581,7 @@ var singleblog = /*#__PURE__*/function (_Component) {
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
             key: index,
             onClick: function onClick() {
-              return _this8.viewPost(post.slug);
+              return _this9.viewPost(post.slug);
             },
             href: "#"
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", null, post.title.rendered));
@@ -69523,7 +69591,7 @@ var singleblog = /*#__PURE__*/function (_Component) {
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
             key: index,
             onClick: function onClick() {
-              return _this8.getCategoryPosts(category.id, category.slug);
+              return _this9.getCategoryPosts(category.id, category.slug);
             },
             href: "#"
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
@@ -69546,7 +69614,7 @@ var singleblog = /*#__PURE__*/function (_Component) {
             className: "comment_author_name"
           }, comment.author_name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
             className: "comment_date"
-          }, _this8.get_date(comment.date))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          }, _this9.get_date(comment.date))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             className: "comment_content",
             dangerouslySetInnerHTML: {
               __html: comment.content.rendered
@@ -69579,7 +69647,7 @@ var singleblog = /*#__PURE__*/function (_Component) {
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
               href: "#",
               onClick: function onClick() {
-                return _this8.viewPost(post.data.slug);
+                return _this9.viewPost(post.data.slug);
               }
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
               className: "card-title"
@@ -69590,14 +69658,14 @@ var singleblog = /*#__PURE__*/function (_Component) {
               }
             }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
               className: "card-text"
-            }, _this8.get_date(post.data.date), " / ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+            }, _this9.get_date(post.data.date), " / ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
               onClick: function onClick() {
-                return _this8.getCategoryPosts(post.categories.id, post.categories.slug);
+                return _this9.getCategoryPosts(post.categories.id, post.categories.slug);
               },
               href: "#"
             }, post.categories.name)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
               onClick: function onClick() {
-                return _this8.viewPost(post.data.slug);
+                return _this9.viewPost(post.data.slug);
               },
               className: "btn btn-primary"
             }, "ReadMore"))));
@@ -69609,7 +69677,7 @@ var singleblog = /*#__PURE__*/function (_Component) {
             return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
               key: index,
               onClick: function onClick() {
-                return _this8.viewPost(post.slug);
+                return _this9.viewPost(post.slug);
               },
               href: "#"
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", null, post.title.rendered));
@@ -69619,7 +69687,7 @@ var singleblog = /*#__PURE__*/function (_Component) {
             return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
               key: index,
               onClick: function onClick() {
-                return _this8.getCategoryPosts(category.id, category.slug);
+                return _this9.getCategoryPosts(category.id, category.slug);
               },
               href: "#"
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {

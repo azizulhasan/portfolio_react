@@ -9,6 +9,8 @@
     <!-- Mobile Specific Metas
   ================================================== -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="url" content="{{url('/')}}">
 
     <!-- CSS
   ================================================== -->
@@ -340,30 +342,36 @@
 			<div class="row">
 				<div class="col-md-6 col-sm-6 wow fadeInRight">
 					<div class="contact-form">
-                        <form class="contact-box" action="{{ route('store.usercontacts') }}" method="post" >
-                            @csrf
+                        <form id="contact_me_form" class="contact-box" action="" method="post" >
+                           
 							<div class="form-group">
 								<label>Name*</label>
-								<input type="text" name="name" class="form-control">
+								<input type="text" value="" name="name" class="form-control">
 							</div>
 
 							<div class="form-group">
 								<label>Email address*</label>
-								<input type="text"  name="email" class="form-control">
+								<input type="text" value=""  name="email" class="form-control">
+							</div>
+
+							<div class="form-group">
+								<label>Phone Number*</label>
+								<input type="number" value=""  name="phone" class="form-control">
 							</div>
 
 							<div class="form-group">
 								<label>Message*</label>
-								<input type="text"  name="message" class="form-control">
+								<input type="text"  value="" name="message" class="form-control">
                             </div>
 						<div class="row">
 							<div class="col-md-12">
-								<input type="submit" value="Contact me"  class="btn btn-default">
+								<input type="submit" value="Contact me" id="contact_me_from_user" class="btn btn-default">
 							</div>
                         </div>
                     </form>
 					</div>
 				</div>
+				
 					<div class="col-md-6 col-sm-6 wow fadeInLeft">
 					<div class="contact-left">
 						@foreach($contacts as $cont)
@@ -449,6 +457,89 @@
 		event.preventDefault();
 		});
 		new WOW().init();
+
+
+
+/* When click edit unit */
+	$("body").on("click", "#contact_me_from_user", function (e) {
+        e.preventDefault();
+        var contact_data = $("#contact_me_form").serializeArray();
+        // console.log(contact_data);
+		// console.log($('meta[name="csrf-token"]').attr('content'))
+		// console.log($("meta[name='url']").attr("content"))
+
+		
+		var err = 0; 
+		for(var i = 0; i< contact_data.length; i++){
+			const data = contact_data[i].value.trim()
+			
+			if(contact_data[i].name == 'name'){
+				var patt = new RegExp(/[A-Za-z]/);
+  				(!patt.test(data))?err++:err
+			}else if (contact_data[i].name == 'email'){
+				(!validateEmail(data))?err++:err
+			}else if (contact_data[i].name == 'phone'){
+				var patt = new RegExp(/[0-9]/);
+  				(!patt.test(data))?err++:err
+			}else if (contact_data[i].name == 'message'  ){
+				
+				if(data == ''){
+					err++
+				}
+			}
+		}
+		
+		
+		function validateEmail(email) {
+			const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			return re.test(String(email).toLowerCase());
+		}
+		if(err>0){
+			alert("Please fill All filed correctly.");
+
+			return;
+		}
+		
+		contact_data = JSON.stringify(contact_data);
+		
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+		$.ajax({
+            method:'POST',
+			url: $("meta[name='url']").attr("content") + "/usercontacts/storeusercontacts",
+			data: {
+				data: contact_data
+			},
+			success: function (res) {
+				// console.log(res);
+
+				var data = JSON.parse(JSON.stringify(res))
+				if(data.status == true){
+					alert('your message is sent to Azizul Hasan')
+				}else{
+					alert('Something went wrong')
+				}
+				// var arr =[];
+				// for( var key in data){
+				// 	arr.push(data[key].id)
+				// }
+				// $("#shoppingCart").html(
+				// `<span>${arr.length}</span>`
+				// )
+				// $("#addProductAlert-"+product_id).css('display', 'block');
+				// $("#addProductAlert-"+product_id).fadeToggle(3000)
+				// $("#addProductAlert-"+product_id).html(`added to Cart. Total Products : ${arr.length}`)
+			
+			},
+			error: function (data) {
+				console.log("Error:", data);
+			},
+		});
+	});
+				
     </script>
   </body>
 </html>
