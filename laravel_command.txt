@@ -1,0 +1,220 @@
+
+
+php artisan -version for viewing verstion of laravel
+
+php artisan serve
+
+php artisan serve --port=3000
+
+
+php artisan make:controller UserController
+
+
+//////////////////////////////////
+DATABASE MIGRATION
+/////////////////////////////////
+
+php artisan make:migration  table name
+
+php artisan make:migration create_users_table --create=users
+
+php artisan make:migration add_votes_to_users_table --table=users      for alter table
+
+
+
+php artisan migrate
+
+php artisan migrate --path=database/migrations/migration file name
+
+
+php artisan migrate:rollback --path=database/migrations/migration file name
+
+php artisan migrate:rollback --steps=5
+
+
+
+
+
+
+//////////////////////////////////
+model manage
+/////////////////////////////////
+php artisan make:model Flight --migration { both are same } php artisan make:model Flight -m
+
+
+
+php artisan make:model Todo -mcr  (model controller resources)
+php artisan make:model Todo -a
+
+//////////////////////////////////
+DATABASE SEEDING
+/////////////////////////////////
+
+composer dump-autoload         first run it then seed
+
+php artisan db:seed
+
+php artisan db:seed --class=UserSeeder    for specific seed class
+php artisan migrate:fresh --seed
+
+
+
+
+
+
+//////////////////////////////////
+Raw Query
+/////////////////////////////////
+
+SELECT tasks.task_title, comments.task_id FROM tasks ,comments 
+WHERE comments.task_id=tasks.main AND comments.task_id='2';
+
+
+
+//////////////////////////////////
+laravel ui
+/////////////////////////////////
+
+
+
+composer require laravel/ui
+php artisan ui:auth
+php artisan ui bootstrap
+php artisan ui bootstrap --auth
+npm install
+npm run dev
+
+
+
+
+//////////////////////////////////
+image link
+/////////////////////////////////
+php artisan storage:link
+
+
+//////////////////////////////////
+component
+/////////////////////////////////
+php artisan make:component Alert
+
+
+
+//////////////////////////////////
+request validation 
+/////////////////////////////////
+
+php artisan make:request StoreBlogPost
+
+
+
+//////////////////////////////////
+Make Middle Ware
+/////////////////////////////////
+php artisan make:middleware CheckAdmin
+
+
+//////////////////////////////////
+Laravel API
+/////////////////////////////////
+
+
+
+php artisan make:resource UserCollection
+
+php artisan make:resource ProductResource
+
+//////////////////////////////////
+Api Passport Creation 
+/////////////////////////////////
+
+1) composer require laravel/passport
+
+2) php artisan migrate
+
+3) php artisan passport:install
+
+4)
+	use Laravel\Passport\HasApiTokens;
+	use HasApiTokens trait as User Model
+
+
+
+ 5) IN   AuthServiceProvider
+
+	use Laravel\Passport\Passport;
+
+
+
+ 	public function boot()
+    	{
+        	$this->registerPolicies();
+
+        	Passport::routes();
+    	}
+
+
+
+
+
+ 6 ) config/auth.php 
+
+
+
+	'api' => [
+        	'driver' => 'passport',  Token will be passport
+        	'provider' => 'users',
+    	],
+
+
+
+
+
+7) Get OAuth token
+
+URL : localhost:8000/oauth/token
+
+Header : 
+	Accept : 	application/json
+	Content-Type: 	application/json
+
+Body: 	
+{
+	"grant_type":"password",
+	"client_id" :"2",   from  oauth_clients table
+	"client_secret" :"BITVy08KzepRblPdBTVMLXVEGFBe1Hg8H0GgoMg7",   from  oauth_clients table
+	"username" : "hasan@gmail.com",  user table 
+	"password" : "123"               user table 
+	
+}
+
+
+
+
+8) then you will get auth token copy that token and during any api data you have follow this rut
+
+
+	Accept : 	application/json
+	Content-Type: 	application/json
+	Authoriztion: 	"Bearer" then pase the token;
+
+
+
+
+
+///////////////////////////////////////////////
+LARAVEL INTERNAL API USE 
+/////////////////////////////////////////////////
+
+
+$request = Request::create('http://127.0.0.1:8000/api/products/', 'GET');
+        $data =  app()->handle($request);
+        $result =$data->getData();
+
+        return $result->data;
+
+
+
+
+
+
